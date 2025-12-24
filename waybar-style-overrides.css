@@ -1,0 +1,28 @@
+/* Waybar style overrides for omarchy-supplement */
+
+/* Active workspace styling - underlined to stand out */
+/* Need specific properties because the base style uses "all: initial" */
+#workspaces button.active {
+  padding: 0 6px;
+  margin: 0 1.5px;
+  min-width: 9px;
+  color: @foreground;
+  background: transparent;
+  border-bottom: 2px solid @foreground;
+  font-weight: bold;
+}
+
+/* Focused workspace on current monitor */
+#workspaces button.focused {
+  padding: 0 6px;
+  margin: 0 1.5px;
+  min-width: 9px;
+  color: @foreground;
+  background: transparent;
+  border-bottom: 2px solid @foreground;
+  font-weight: bold;
+}
+
+
+
+
