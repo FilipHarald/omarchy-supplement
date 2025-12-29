@@ -46,7 +46,7 @@ fi
 
 # Change workspace format to show numbers instead of icons
 echo "- Updating workspace format to show numbers..."
-sed -i 's/"format": "{icon}"/"format": "{name}"/g' "$WAYBAR_CONFIG"
+sed -i '/"hyprland\/workspaces": {/,/^  },$/s/"format": "{icon}"/"format": "{name}"/' "$WAYBAR_CONFIG"
 
 # Add CSS overrides by importing our override file
 echo "Adding CSS style overrides..."
@@ -66,7 +66,7 @@ echo "Restarting waybar..."
 # Kill and restart waybar
 killall waybar 2>/dev/null || true
 sleep 1
-waybar &
+waybar &>/dev/null &
 
 echo ""
 echo "✓ Waybar configured with:"
