@@ -25,16 +25,34 @@ else
     cd "$REPO_DIR"
 fi
 
-# Remove existing bashrc to avoid conflicts
+# Stow all directories except 'legacy'
+echo "Stowing dotfiles..."
+for dir in "$REPO_DIR"/*/; do
+    dirname=$(basename "$dir")
+    
+    # Skip legacy directory
+    if [ "$dirname" = "legacy" ]; then
+        echo "Skipping $dirname"
+        continue
+    fi
+    
+    echo "Stowing $dirname..."
+    stow -v "$dirname"
+done
+
+# Add bash-additions sourcing to .bashrc if not already present
 if [ -f "$HOME/.bashrc" ]; then
-    echo "Removing existing ~/.bashrc"
-    rm "$HOME/.bashrc"
+    if ! grep -q "bash-additions/entry.sh" "$HOME/.bashrc"; then
+        echo "" >> "$HOME/.bashrc"
+        echo "# Source custom bash additions from dotfiles" >> "$HOME/.bashrc"
+        echo 'if [ -f "$HOME/.config/bash-additions/entry.sh" ]; then' >> "$HOME/.bashrc"
+        echo '    source "$HOME/.config/bash-additions/entry.sh"' >> "$HOME/.bashrc"
+        echo 'fi' >> "$HOME/.bashrc"
+        echo "Added bash-additions sourcing to ~/.bashrc"
+    else
+        echo "bash-additions sourcing already present in ~/.bashrc"
+    fi
 fi
 
-# Stow configurations
-echo "Stowing dotfiles..."
-stow -v nvim2
-stow -v git
-
 echo "Dotfiles installed successfully!"
-echo "NOTE: Your bash, nvim (nvim2), and git configurations are now active."
+echo "NOTE: Your nvim, git, and bash configurations are now active."
