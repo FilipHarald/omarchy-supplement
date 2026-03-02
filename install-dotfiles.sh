@@ -40,6 +40,12 @@ for dir in "$REPO_DIR"/*/; do
     stow -v "$dirname"
 done
 
+# Stow hidden packages (handled separately)
+if [ -d "$REPO_DIR/.foundry" ]; then
+    echo "Stowing .foundry..."
+    stow -v ".foundry"
+fi
+
 # Add bash-additions sourcing to .bashrc if not already present
 if [ -f "$HOME/.bashrc" ]; then
     if ! grep -q "bash-additions/entry.sh" "$HOME/.bashrc"; then
