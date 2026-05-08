@@ -4,6 +4,13 @@ set -e
 
 echo "Setting up npm global configuration..."
 
+NVM_HOME="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_HOME/nvm.sh" ]; then
+    echo "nvm detected at $NVM_HOME; skipping npm prefix configuration."
+    echo "nvm manages a separate global package directory for each Node version."
+    exit 0
+fi
+
 # Create npm global directory if it doesn't exist
 NPM_GLOBAL_DIR="$HOME/.local/npm"
 if [ ! -d "$NPM_GLOBAL_DIR" ]; then

@@ -4,6 +4,9 @@ set -e
 
 REPO_URL="https://github.com/FilipHarald/dotfiles"
 REPO_DIR="$HOME/dotfiles"
+BASH_ADDITIONS_BLOCK='if [[ -f "$HOME/.config/bash-additions/entry.sh" ]]; then
+  source "$HOME/.config/bash-additions/entry.sh"
+fi'
 
 echo "Setting up dotfiles..."
 
@@ -46,14 +49,11 @@ if [ -d "$REPO_DIR/.foundry" ]; then
     stow -v ".foundry"
 fi
 
-# Add bash-additions sourcing to .bashrc if not already present
-if [ -f "$HOME/.bashrc" ]; then
+# Add bash-additions sourcing to .bashrc if not already present.
+# Omarchy upgrades can reset ~/.bashrc, so install-all re-applies this hook.
+if [[ -f "$HOME/.bashrc" ]]; then
     if ! grep -q "bash-additions/entry.sh" "$HOME/.bashrc"; then
-        echo "" >> "$HOME/.bashrc"
-        echo "# Source custom bash additions from dotfiles" >> "$HOME/.bashrc"
-        echo 'if [ -f "$HOME/.config/bash-additions/entry.sh" ]; then' >> "$HOME/.bashrc"
-        echo '    source "$HOME/.config/bash-additions/entry.sh"' >> "$HOME/.bashrc"
-        echo 'fi' >> "$HOME/.bashrc"
+        printf '\n# Source custom bash additions from dotfiles\n%s\n' "$BASH_ADDITIONS_BLOCK" >> "$HOME/.bashrc"
         echo "Added bash-additions sourcing to ~/.bashrc"
     else
         echo "bash-additions sourcing already present in ~/.bashrc"
