@@ -5,8 +5,7 @@
 # Using descriptions for stable monitor identification (DisplayLink-safe)
 # Layout matches hyprmon home1 profile: Dell (left) → LG (middle) → laptop (right)
 monitor=desc:Dell Inc. DELL U2717D,2560x1440@59.95,0x0,1.25
-# monitor=desc:LG Electronics LG ULTRAGEAR,2560x1440@59.95,2048x0,1.25
-monitor=desc:LG Electronics LG ULTRAGEAR,disable
+monitor=desc:LG Electronics LG ULTRAGEAR,2560x1440@59.95,2048x0,1.25
 monitor=eDP-1,1920x1200@59.95,4096x0,1.50
 # monitor=desc:Dell Inc. DELL U2717D,2560x1440@59.95,0x0,1.00
 # monitor=desc:LG Electronics LG ULTRAGEAR,2560x1440@59.95,2560x0,1.00
@@ -89,7 +88,7 @@ bindd = SUPER SHIFT ALT, l, Move workspace to right monitor, movecurrentworkspac
 
 # Remapped utilities (due to hjkl conflicts)
 bindd = SUPER, U, Show key bindings, exec, omarchy-menu-keybindings
-bindd = SUPER, I, Toggle window split, layoutmsg, togglesplit
+bindd = SUPER, I, Toggle window split, togglesplit
 
 # Override lock screen binding (SUPER+CTRL+L → SUPER+CTRL+ESC)
 unbind = SUPER CTRL, L

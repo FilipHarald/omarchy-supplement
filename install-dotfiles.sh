@@ -37,6 +37,24 @@ for dir in "$REPO_DIR"/*/; do
     fi
     
     echo "Stowing $dirname..."
+    if [ "$dirname" = "nvim" ]; then
+        echo "Removing default nvim configuration..."
+        rm -rf "$HOME/.config/nvim"
+    fi
+
+    if [ "$dirname" = "opencode" ]; then
+        stow -v --adopt "$dirname"
+
+        if ! git diff --quiet -- opencode; then
+            echo "WARNING: stow --adopt changed tracked opencode dotfiles."
+            git diff -- opencode
+            echo "Commit or revert the diff, then rerun: stow -v --dir=$REPO_DIR --target=$HOME opencode"
+            exit 1
+        fi
+
+        continue
+    fi
+
     stow -v "$dirname"
 done
 
