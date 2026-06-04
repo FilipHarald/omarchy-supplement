@@ -41,6 +41,24 @@ fi
 echo "Waiting for reconnect..."
 sleep 2
 
+if [ -e /sys/class/drm/card0-DVI-I-1/status ]; then
+    echo "DisplayLink DRM connector status: $(cat /sys/class/drm/card0-DVI-I-1/status)"
+fi
+
+echo "Triggering DRM hotplug change events..."
+if command -v udevadm >/dev/null 2>&1; then
+    if udevadm trigger --subsystem-match=drm --action=change 2>/dev/null; then
+        echo "DRM hotplug change events triggered."
+    elif sudo -n udevadm trigger --subsystem-match=drm --action=change 2>/dev/null; then
+        echo "DRM hotplug change events triggered via sudo."
+    else
+        echo "Could not trigger DRM hotplug events without interactive sudo."
+        echo "Run: sudo udevadm trigger --subsystem-match=drm --action=change"
+    fi
+fi
+
+sleep 1
+
 echo "Reloading Hyprland config..."
 hyprctl reload >/dev/null || true
 
@@ -97,6 +115,10 @@ if [ "$monitor_count" -ge 3 ]; then
 fi
 
 echo "Warning: only $monitor_count monitors detected in Hyprland."
+if hyprctl rollinglog 2>/dev/null | grep -q "Failed to update renderer state for /dev/dri/card0"; then
+    echo "Hyprland/Aquamarine saw the DisplayLink connector but failed renderer setup for /dev/dri/card0."
+    echo "This state usually cannot be fixed by monitor rules; restart Hyprland after saving work."
+fi
 echo "Helpful checks:"
 echo "  - Replug dock USB-C cable"
 echo "  - Power-cycle dock"

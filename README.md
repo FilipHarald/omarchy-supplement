@@ -59,3 +59,16 @@ Located in the `update/` directory:
   omarchy restart walker
   ```
 - Avoid custom Hyprmon launcher overrides unless the stock `/usr/share/applications/hyprmon.desktop` is actually broken.
+
+## Omarchy 3.8.1 / Hyprland 0.55 Notes
+
+- `install-hyprland-base.sh` generates `hyprland-looknfeel-compat.conf` from Omarchy's current default `looknfeel.conf` and points `~/.config/hypr/hyprland.conf` at it.
+- The generated file fixes Hyprland 0.55 parse errors from Omarchy 3.8.1 defaults: locked group border colors can no longer be `-1`, and `dwindle:pseudotile` was removed.
+- The custom split-toggle binding uses `layoutmsg, togglesplit`, matching the updated Omarchy tiling binding format.
+
+## DisplayLink Resume Recovery Notes
+
+- Keep Omarchy's generic `monitor=,preferred,auto,1` rule enabled so Hyprland can auto-discover DisplayLink outputs after hotplug or resume.
+- Do not pin `AQ_DRM_DEVICES` in Hyprland config. On this laptop it made reboot behavior worse and could leave displays unavailable.
+- `recovery/install-displaylink-recover.sh` restarts `displaylink.service`, triggers DRM hotplug change events, reloads Hyprland, and replays monitor rules.
+- If recovery reports `Failed to update renderer state for /dev/dri/card0`, Hyprland/Aquamarine saw the DisplayLink connector but failed renderer setup. In that state monitor rules are not enough; save work and restart Hyprland.
