@@ -35,6 +35,10 @@ echo "Setting up Hyprland base configuration..."
 "$SCRIPT_DIR/install-hyprland-base.sh"
 echo ""
 
+echo "Enabling Hyprlock input animations..."
+"$SCRIPT_DIR/install-hyprlock-animation.sh"
+echo ""
+
 echo "Applying Waybar tweaks..."
 "$SCRIPT_DIR/install-waybar-tweaks.sh"
 echo ""

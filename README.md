@@ -30,6 +30,7 @@ Or run individual scripts as needed:
 | `install-dotfiles.sh` | Clone and stow dotfiles from your repository |
 | `install-docker-ufw-forwarding.sh` | Allow Docker bridge containers to reach the internet through UFW |
 | `install-hyprland-base.sh` | Apply Hyprland configuration |
+| `install-hyprlock-animation.sh` | Enable lock screen input animations |
 | `install-waybar-tweaks.sh` | Apply Waybar customizations |
 
 ## Update Scripts
