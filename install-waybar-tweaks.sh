@@ -5,6 +5,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 WAYBAR_CONFIG="$HOME/.config/waybar/config.jsonc"
 WAYBAR_STYLE="$HOME/.config/waybar/style.css"
+WAYBAR_THEME="$HOME/.local/state/omarchy/current/theme/waybar.css"
 BACKUP_CONFIG="$WAYBAR_CONFIG.bak"
 BACKUP_STYLE="$WAYBAR_STYLE.bak"
 
@@ -51,26 +52,31 @@ sed -i '/"hyprland\/workspaces": {/,/^  },$/s/"format": "{icon}"/"format": "{nam
 # Add CSS overrides by importing our override file
 echo "Adding CSS style overrides..."
 if [ -f "$WAYBAR_STYLE" ]; then
-    # Check if our import already exists
-    if ! grep -q "omarchy-supplement/waybar-style-overrides.css" "$WAYBAR_STYLE"; then
-        # Add import at the end of the file
-        echo "" >> "$WAYBAR_STYLE"
-        echo "/* Omarchy supplement overrides */" >> "$WAYBAR_STYLE"
-        echo "@import \"$SCRIPT_DIR/waybar-style-overrides.css\";" >> "$WAYBAR_STYLE"
+    if [ -f "$WAYBAR_THEME" ]; then
+        sed -i "s|@import \"../omarchy/current/theme/waybar.css\";|@import \"$WAYBAR_THEME\";|" "$WAYBAR_STYLE"
     fi
+
+    # CSS imports must be before regular rules for GTK/Waybar to apply them.
+    sed -i "\|@import \"$SCRIPT_DIR/waybar-style-overrides.css\";|d" "$WAYBAR_STYLE"
+    sed -i "1a@import \"$SCRIPT_DIR/waybar-style-overrides.css\";" "$WAYBAR_STYLE"
 fi
 
 echo "Waybar tweaks applied successfully!"
-echo "Restarting waybar..."
 
-# Kill and restart waybar
-killall waybar 2>/dev/null || true
-sleep 1
-waybar &>/dev/null &
+if pgrep -x quickshell >/dev/null 2>&1; then
+    echo "Quickshell Omarchy bar is running; stopping legacy Waybar to avoid duplicate bars..."
+    killall waybar 2>/dev/null || true
+else
+    echo "Restarting waybar..."
+    killall waybar 2>/dev/null || true
+    sleep 1
+    waybar &>/dev/null &
+fi
 
 echo ""
 echo "✓ Waybar configured with:"
 echo "  - Always visible tray icons"
 echo "  - Workspace numbers (not icons)"
-echo "  - Active workspace highlighted in accent color"
+echo "  - Active workspace highlighted in bold dark green"
+echo "  - Urgent workspaces highlighted in bold red"
 echo "  - Dynamic workspace detection (no hardcoded outputs)"

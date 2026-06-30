@@ -30,10 +30,20 @@ Or run individual scripts as needed:
 | `install-docker-ufw-forwarding.sh` | Allow Docker bridge containers to reach the internet through UFW |
 | `install-hyprland-base.sh` | Apply Omarchy Quattro Hyprland Lua configuration |
 | `install-hyprlock-animation.sh` | Enable lock screen input animations |
-| `install-shell-workspaces.sh` | Install Quickshell workspace widget showing only the current screen |
-| `install-waybar-tweaks.sh` | Apply legacy Waybar customizations; not used by Quickshell Omarchy |
+| `install-shell-workspaces.sh` | Install Quickshell workspace widget showing only the current screen, with active workspaces bold dark green and urgent workspaces bold red |
+| `install-waybar-tweaks.sh` | Apply legacy Waybar customizations with matching workspace colors; not used by Quickshell Omarchy |
 
 ## Update Scripts
+
+## Testing Urgent Workspaces
+
+`notify-send` does not mark a workspace urgent. It only shows a notification popup.
+
+Run this in a terminal on the workspace you want to turn red, and switch away before the sleep finishes:
+
+```bash
+sleep 5; printf '\a'
+```
 
 Located in the `update/` directory:
 

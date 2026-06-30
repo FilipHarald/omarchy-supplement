@@ -1,14 +1,13 @@
 /* Waybar style overrides for omarchy-supplement */
 
-/* Active workspace styling - underlined to stand out */
+/* Active workspace styling - bold dark green */
 /* Need specific properties because the base style uses "all: initial" */
 #workspaces button.active {
   padding: 0 6px;
   margin: 0 1.5px;
   min-width: 9px;
-  color: @foreground;
+  color: #006400;
   background: transparent;
-  border-bottom: 2px solid @foreground;
   font-weight: bold;
 }
 
@@ -17,12 +16,20 @@
   padding: 0 6px;
   margin: 0 1.5px;
   min-width: 9px;
-  color: @foreground;
+  color: #006400;
   background: transparent;
-  border-bottom: 2px solid @foreground;
   font-weight: bold;
 }
 
+/* Urgent workspace - bold red */
+#workspaces button.urgent {
+  padding: 0 6px;
+  margin: 0 1.5px;
+  min-width: 9px;
+  color: #ff0000;
+  background: transparent;
+  font-weight: bold;
+}
 
 
 
