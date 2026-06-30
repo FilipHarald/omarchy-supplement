@@ -45,13 +45,13 @@ for dir in "$REPO_DIR"/*/; do
         rm -rf "$HOME/.config/nvim"
     fi
 
-    if [ "$dirname" = "opencode" ]; then
+    if [ "$dirname" = "opencode" ] || [ "$dirname" = "starship" ]; then
         stow -v --adopt "$dirname"
 
-        if ! git diff --quiet -- opencode; then
-            echo "WARNING: stow --adopt changed tracked opencode dotfiles."
-            git diff -- opencode
-            echo "Commit or revert the diff, then rerun: stow -v --dir=$REPO_DIR --target=$HOME opencode"
+        if ! git diff --quiet -- "$dirname"; then
+            echo "WARNING: stow --adopt changed tracked $dirname dotfiles."
+            git diff -- "$dirname"
+            echo "Commit or revert the diff, then rerun: stow -v --dir=$REPO_DIR --target=$HOME $dirname"
             exit 1
         fi
 

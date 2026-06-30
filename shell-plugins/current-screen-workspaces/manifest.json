@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "id": "local.current-screen-workspaces",
+  "name": "Current Screen Workspaces",
+  "version": "1.0.0",
+  "description": "Workspace numbers filtered to the bar's current screen.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "Widget.qml"
+  }
+}

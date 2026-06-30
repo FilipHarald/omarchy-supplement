@@ -16,7 +16,6 @@ Or run individual scripts as needed:
 ./install-neovim.sh
 ./install-dotfiles.sh
 ./install-hyprland-base.sh
-./install-waybar-tweaks.sh
 ```
 
 ## Available Scripts
@@ -29,9 +28,10 @@ Or run individual scripts as needed:
 | `install-neovim.sh` | Build and install Neovim nightly from source |
 | `install-dotfiles.sh` | Clone and stow dotfiles from your repository |
 | `install-docker-ufw-forwarding.sh` | Allow Docker bridge containers to reach the internet through UFW |
-| `install-hyprland-base.sh` | Apply Hyprland configuration |
+| `install-hyprland-base.sh` | Apply Omarchy Quattro Hyprland Lua configuration |
 | `install-hyprlock-animation.sh` | Enable lock screen input animations |
-| `install-waybar-tweaks.sh` | Apply Waybar customizations |
+| `install-shell-workspaces.sh` | Install Quickshell workspace widget showing only the current screen |
+| `install-waybar-tweaks.sh` | Apply legacy Waybar customizations; not used by Quickshell Omarchy |
 
 ## Update Scripts
 
@@ -50,26 +50,27 @@ Located in the `update/` directory:
 
 ## DisplayLink / Monitor Configuration Notes
 
-- Keep Omarchy's generic Hyprland monitor rule enabled in `~/.config/hypr/monitors.conf`:
-  ```conf
-  monitor=,preferred,auto,1
+- Keep Omarchy's generic Hyprland monitor rule enabled in `~/.config/hypr/monitors.lua`:
+  ```lua
+  hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy_monitor_scale })
   ```
-- DisplayLink hotplug depends on Hyprland first auto-discovering the `evdi` output. Explicit `desc:` monitor rules in `hyprland-base.conf` should refine the layout after discovery, not replace the generic rule.
+- DisplayLink hotplug depends on Hyprland first auto-discovering the `evdi` output. Explicit `desc:` monitor rules in `hypr/monitors.lua` should refine the layout after discovery, not replace the generic rule.
 - If Hyprmon disappears from the Omarchy launcher after desktop entry changes, refresh the launcher cache with:
   ```bash
   omarchy restart walker
   ```
 - Avoid custom Hyprmon launcher overrides unless the stock `/usr/share/applications/hyprmon.desktop` is actually broken.
 
-## Omarchy 3.8.1 / Hyprland 0.55 Notes
+## Omarchy Quattro / Hyprland Lua Notes
 
-- `install-hyprland-base.sh` generates `hyprland-looknfeel-compat.conf` from Omarchy's current default `looknfeel.conf` and points `~/.config/hypr/hyprland.conf` at it.
-- The generated file fixes Hyprland 0.55 parse errors from Omarchy 3.8.1 defaults: locked group border colors can no longer be `-1`, and `dwindle:pseudotile` was removed.
-- The custom split-toggle binding uses `layoutmsg, togglesplit`, matching the updated Omarchy tiling binding format.
+- `install-hyprland-base.sh` copies the supplement's Lua modules from `hypr/` into `~/.config/hypr/`.
+- Omarchy's `~/.config/hypr/hyprland.lua` loads these modules with `require("hypr.monitors")`, `require("hypr.input")`, `require("hypr.bindings")`, and `require("hypr.looknfeel")`.
+- If a legacy `~/.config/hypr/hyprland.conf` exists, the installer moves it aside so Hyprland uses the Lua config.
+- `hyprland-base.conf` and `hyprland-looknfeel-compat.conf` are legacy references for the old `.conf` setup.
 
 ## DisplayLink Resume Recovery Notes
 
-- Keep Omarchy's generic `monitor=,preferred,auto,1` rule enabled so Hyprland can auto-discover DisplayLink outputs after hotplug or resume.
+- Keep Omarchy's generic `hl.monitor({ output = "", mode = "preferred", position = "auto", ... })` rule enabled so Hyprland can auto-discover DisplayLink outputs after hotplug or resume.
 - Do not pin `AQ_DRM_DEVICES` in Hyprland config. On this laptop it made reboot behavior worse and could leave displays unavailable.
 - `recovery/install-displaylink-recover.sh` restarts `displaylink.service`, triggers DRM hotplug change events, reloads Hyprland, and replays monitor rules.
 - If recovery reports `Failed to update renderer state for /dev/dri/card0`, Hyprland/Aquamarine saw the DisplayLink connector but failed renderer setup. In that state monitor rules are not enough; save work and restart Hyprland.
