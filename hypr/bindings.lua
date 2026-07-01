@@ -5,8 +5,12 @@ local omarchy_shell_env = "omarchy-shell"
 
 -- Unbind conflicting defaults before remapping.
 hl.unbind("SUPER + J")
+hl.unbind("SUPER + CTRL + J")
 hl.unbind("SUPER + K")
+hl.unbind("SUPER + CTRL + K")
 hl.unbind("SUPER + L")
+hl.unbind("SUPER + CTRL + L")
+hl.unbind("SUPER + H")
 hl.unbind("SUPER + CTRL + H")
 
 hl.unbind("SUPER + LEFT")

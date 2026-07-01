@@ -2,17 +2,25 @@
 -- List current monitors and modes with: hyprctl monitors all
 
 local omarchy_gdk_scale = 1
-local omarchy_monitor_scale = 1
+local omarchy_monitor_scale = 1.5
 
 hl.env("GDK_SCALE", tostring(omarchy_gdk_scale))
 
 -- Keep Omarchy's generic auto rule so DisplayLink/hotplug outputs are discovered.
 hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy_monitor_scale })
 
--- Laptop setup.
--- hl.monitor({ output = "desc:Dell Inc. DELL U2717D", mode = "2560x1440@59.95", position = "0x0", scale = 1.50 })
-hl.monitor({ output = "desc:LG Electronics LG ULTRAGEAR", mode = "2560x1440@59.95", position = "2048x0", scale = 1.50 })
-hl.monitor({ output = "eDP-1", mode = "1920x1200@59.95", position = "4096x0", scale = 1.50 })
+hl.monitor({
+	output = "eDP-1",
+	mode = "1920x1200@59.95",
+	position = "4448x550",
+	scale = 1.5,
+})
+hl.monitor({
+	output = "DVI-I-1",
+	mode = "3840x2160@60.0",
+	position = "2048x0",
+	scale = 1.6,
+})
 
 -- Stationary setup.
 -- hl.monitor({ output = "desc:Dell Inc. DELL U2717D", mode = "2560x1440@59.95", position = "0x0", scale = 1.25 })
