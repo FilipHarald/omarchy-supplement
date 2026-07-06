@@ -27,6 +27,10 @@ echo "Setting up dotfiles..."
 "$SCRIPT_DIR/install-dotfiles.sh"
 echo ""
 
+echo "Setting up AI workflow assets..."
+"$SCRIPT_DIR/install-ai-assets.sh"
+echo ""
+
 echo "Configuring npm global packages..."
 "$SCRIPT_DIR/install-npm-config.sh"
 echo ""

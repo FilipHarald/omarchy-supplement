@@ -27,6 +27,7 @@ Or run individual scripts as needed:
 | `install-stow.sh` | Install GNU Stow |
 | `install-neovim.sh` | Build and install Neovim nightly from source |
 | `install-dotfiles.sh` | Clone and stow dotfiles from your repository |
+| `install-ai-assets.sh` | Clone/pull and stow `ai-public` and `ai-private` workflow assets |
 | `install-docker-ufw-forwarding.sh` | Allow Docker bridge containers to reach the internet through UFW |
 | `install-hyprland-base.sh` | Apply Omarchy Quattro Hyprland Lua configuration |
 | `install-hyprlock-animation.sh` | Enable lock screen input animations |
