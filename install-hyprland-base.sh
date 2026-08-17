@@ -81,9 +81,14 @@ if command -v systemctl >/dev/null 2>&1; then
 fi
 
 echo "Reloading Hyprland configuration..."
-if command -v hyprctl >/dev/null 2>&1 && hyprctl instances >/dev/null 2>&1; then
-  hyprctl reload >/dev/null
-  errors="$(hyprctl configerrors)"
+if command -v hyprctl >/dev/null 2>&1 && hyprctl instances 2>/dev/null | grep -q '^instance '; then
+  hyprctl_args=()
+  if [ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    hyprctl_args=(-i 0)
+  fi
+
+  hyprctl "${hyprctl_args[@]}" reload >/dev/null
+  errors="$(hyprctl "${hyprctl_args[@]}" configerrors)"
   if [ -n "$errors" ]; then
     printf '%s\n' "$errors" >&2
     exit 1

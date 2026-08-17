@@ -70,12 +70,6 @@ for dir in "$REPO_DIR"/*/; do
     stow -v "$dirname"
 done
 
-# Stow hidden packages (handled separately)
-if [ -d "$REPO_DIR/.foundry" ]; then
-    echo "Stowing .foundry..."
-    stow -v ".foundry"
-fi
-
 # Migrate the pre-v4 Omarchy bootstrap without disturbing user additions.
 if grep -Fq 'source ~/.local/share/omarchy/default/bash/rc' "$HOME/.bashrc"; then
     cp "$HOME/.bashrc" "$HOME/.bashrc.bak.$(date +%Y%m%d-%H%M%S)"
