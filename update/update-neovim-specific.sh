@@ -13,7 +13,7 @@ if [ -z "$1" ]; then
     NVIM_DIR="$HOME/.local/src/neovim"
     if [ -d "$NVIM_DIR" ]; then
         cd "$NVIM_DIR"
-        git fetch --all --tags 2>/dev/null
+        git fetch origin --tags --force 2>/dev/null
         echo ""
         git tag -l 'v0.1*' | sort -V | tail -10
     else
@@ -26,6 +26,11 @@ fi
 
 VERSION="$1"
 NVIM_DIR="$HOME/.local/src/neovim"
+
+if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "ERROR: Expected a release tag such as v0.12.0."
+    exit 1
+fi
 
 # Check if neovim source exists
 if [ ! -d "$NVIM_DIR" ]; then
@@ -43,10 +48,10 @@ echo ""
 
 # Fetch latest tags
 echo "Fetching latest updates from GitHub..."
-git fetch --all --tags
+git fetch origin --tags --force
 
 # Check if version exists
-if ! git rev-parse "$VERSION" >/dev/null 2>&1; then
+if ! git rev-parse --verify "refs/tags/$VERSION^{commit}" >/dev/null 2>&1; then
     echo "ERROR: Version $VERSION not found."
     echo ""
     echo "Available versions:"
@@ -56,7 +61,7 @@ fi
 
 # Checkout specified version
 echo "Checking out $VERSION..."
-git checkout "$VERSION"
+git checkout --detach "refs/tags/$VERSION"
 
 # Clean previous builds
 echo "Cleaning previous builds..."
@@ -68,7 +73,11 @@ make CMAKE_BUILD_TYPE=Release
 
 # Install
 echo "Installing to /usr/local..."
-sudo make install
+if [ -t 0 ]; then
+    sudo make install
+else
+    pkexec make install
+fi
 
 # Verify
 NEW_VERSION=$(nvim --version | head -1)

@@ -39,8 +39,8 @@ echo "Setting up Hyprland base configuration..."
 "$SCRIPT_DIR/install-hyprland-base.sh"
 echo ""
 
-echo "Enabling Hyprlock input animations..."
-"$SCRIPT_DIR/install-hyprlock-animation.sh"
+echo "Installing Quickshell workspace widget..."
+"$SCRIPT_DIR/install-shell-workspaces.sh"
 echo ""
 
 echo "=================================="
@@ -51,6 +51,10 @@ echo "IMPORTANT NOTES:"
 echo "- Log out and log back in for docker group membership to take effect"
 echo "- Syncthing is running at http://127.0.0.1:8384"
 echo "- Your nvim configuration will auto-install plugins on first launch"
-echo "- npm global packages are configured to install to ~/.local/npm"
+if [[ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]]; then
+  echo "- npm globals are managed by nvm"
+else
+  echo "- npm global packages are configured under ~/.local/npm"
+fi
 echo "- Waybar tweaks are not applied by default on Quickshell-based Omarchy"
 echo ""

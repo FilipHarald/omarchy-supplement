@@ -21,7 +21,16 @@ DEPS=(
     git
 )
 
-yay -S --noconfirm --needed "${DEPS[@]}"
+missing_deps=()
+for package in "${DEPS[@]}"; do
+    pacman -Q "$package" >/dev/null 2>&1 || missing_deps+=("$package")
+done
+
+if [ "${#missing_deps[@]}" -gt 0 ]; then
+    yay -S --noconfirm --needed "${missing_deps[@]}"
+else
+    echo "Build dependencies are already installed."
+fi
 
 # Clone neovim if not already present
 NVIM_DIR="$HOME/.local/src/neovim"
@@ -32,14 +41,14 @@ if [ ! -d "$NVIM_DIR" ]; then
 else
     echo "Neovim repository already exists, updating..."
     cd "$NVIM_DIR"
-    git fetch --all
+    git fetch origin --force refs/tags/nightly:refs/tags/nightly
 fi
 
 cd "$NVIM_DIR"
 
 # Checkout nightly
 echo "Checking out nightly"
-git checkout nightly
+git checkout --detach refs/tags/nightly
 
 # Clean previous builds
 echo "Cleaning previous builds..."
@@ -50,7 +59,11 @@ echo "Building Neovim (this may take a few minutes)..."
 make CMAKE_BUILD_TYPE=Release
 
 echo "Installing Neovim to /usr/local..."
-sudo make install
+if [ -t 0 ]; then
+    sudo make install
+else
+    pkexec make install
+fi
 
 # Verify installation
 NVIM_VERSION=$(nvim --version | head -1)

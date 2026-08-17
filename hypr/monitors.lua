@@ -2,7 +2,7 @@
 -- List current monitors and modes with: hyprctl monitors all
 
 local omarchy_gdk_scale = 1
-local omarchy_monitor_scale = 1.5
+local omarchy_monitor_scale = 1
 
 hl.env("GDK_SCALE", tostring(omarchy_gdk_scale))
 
@@ -12,14 +12,14 @@ hl.monitor({ output = "", mode = "preferred", position = "auto", scale = omarchy
 hl.monitor({
 	output = "eDP-1",
 	mode = "1920x1200@59.95",
-	position = "4448x550",
-	scale = 1.5,
+	position = "4480x240",
+	scale = 1,
 })
 hl.monitor({
 	output = "DVI-I-1",
-	mode = "3840x2160@60.0",
-	position = "2048x0",
-	scale = 1.6,
+	mode = "2560x1440@143.93",
+	position = "1920x0",
+	scale = 1,
 })
 
 -- Stationary setup.

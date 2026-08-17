@@ -15,8 +15,8 @@ if [ ! -f "$SOURCE_DIR/manifest.json" ] || [ ! -f "$SOURCE_DIR/Widget.qml" ]; th
 fi
 
 if [ ! -f "$SHELL_CONFIG" ]; then
-  echo "Omarchy shell config not found at $SHELL_CONFIG"
-  exit 1
+  mkdir -p "$(dirname "$SHELL_CONFIG")"
+  cp /usr/share/omarchy/config/omarchy/shell.json "$SHELL_CONFIG"
 fi
 
 mkdir -p "$(dirname "$TARGET_DIR")"
@@ -26,13 +26,14 @@ cp -R "$SOURCE_DIR" "$TARGET_DIR"
 cp "$SHELL_CONFIG" "$SHELL_CONFIG.bak.$TS"
 jq --arg id "$PLUGIN_ID" '
   .bar.layout |= with_entries(
-    .value |= map(if (type == "object" and .id == "omarchy.workspaces") then {id: $id} else . end)
+    .value |= map(if (type == "object" and .id == "omarchy.workspaces") then .id = $id else . end)
   ) |
-  .plugins = ((.plugins // []) | map(select(.id != $id)) + [{id: $id}])
+  .plugins = ((.plugins // []) | map(select(.id != $id)))
 ' "$SHELL_CONFIG" > "$SHELL_CONFIG.tmp"
 mv "$SHELL_CONFIG.tmp" "$SHELL_CONFIG"
 
-OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}" omarchy plugin rescan >/dev/null 2>&1 || true
-OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}" omarchy restart shell >/dev/null 2>&1 || true
+if pgrep -x quickshell >/dev/null 2>&1; then
+  OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}" omarchy-shell shell rescanPlugins >/dev/null
+fi
 
 echo "Installed $PLUGIN_ID and replaced omarchy.workspaces in shell.json."

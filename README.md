@@ -4,7 +4,7 @@ Reproducible development environment setup for omarchy (Arch Linux), using modul
 
 ## Quick Start
 
-Run all installation scripts:
+Run the default supported installation sequence:
 ```bash
 cd ~/omarchy-supplement
 chmod +x *.sh
@@ -22,17 +22,17 @@ Or run individual scripts as needed:
 
 | Script | Purpose |
 |--------|---------|
-| `install-all.sh` | Run all installation scripts in order |
+| `install-all.sh` | Run the supported installation scripts in order |
 | `install-packages.sh` | Install core system packages |
 | `install-stow.sh` | Install GNU Stow |
 | `install-neovim.sh` | Build and install Neovim nightly from source |
 | `install-dotfiles.sh` | Clone and stow dotfiles from your repository |
 | `install-ai-assets.sh` | Clone/pull and stow `ai-public` and `ai-private` workflow assets |
-| `install-docker-ufw-forwarding.sh` | Allow Docker bridge containers to reach the internet through UFW |
+| `install-npm-config.sh` | Configure npm globals when Node is not managed by nvm |
 | `install-hyprland-base.sh` | Apply Omarchy Quattro Hyprland Lua configuration |
-| `install-hyprlock-animation.sh` | Enable lock screen input animations |
+| `install-hyprlock-animation.sh` | Configure standalone Hyprlock; Omarchy 4 uses its Quickshell lock screen |
 | `install-shell-workspaces.sh` | Install Quickshell workspace widget showing only the current screen, with active workspaces bold dark green and urgent workspaces bold red |
-| `install-waybar-tweaks.sh` | Apply legacy Waybar customizations with matching workspace colors; not used by Quickshell Omarchy |
+| `install-waybar-tweaks.sh` | Retired on Omarchy 4, which uses Quickshell instead of Waybar |
 
 ## Update Scripts
 
@@ -40,7 +40,7 @@ Or run individual scripts as needed:
 
 `notify-send` does not mark a workspace urgent. It only shows a notification popup.
 
-Run this in a terminal on the workspace you want to turn red, and switch away before the sleep finishes:
+Run this in a terminal on the workspace you want to turn red, and switch away before the sleep finishes. This depends on the terminal translating BEL into an urgency request:
 
 ```bash
 sleep 5; printf '\a'
@@ -56,7 +56,7 @@ Located in the `update/` directory:
 ## Notes
 
 - All scripts use `set -e` to exit on first error
-- Scripts are idempotent - safe to run multiple times
+- Scripts are intended to be rerunnable; review backups and local repository state first
 - Check individual scripts for details on what they install/configure
 
 ## DisplayLink / Monitor Configuration Notes
@@ -68,7 +68,7 @@ Located in the `update/` directory:
 - DisplayLink hotplug depends on Hyprland first auto-discovering the `evdi` output. Explicit `desc:` monitor rules in `hypr/monitors.lua` should refine the layout after discovery, not replace the generic rule.
 - If Hyprmon disappears from the Omarchy launcher after desktop entry changes, refresh the launcher cache with:
   ```bash
-  omarchy restart walker
+  omarchy restart shell
   ```
 - Avoid custom Hyprmon launcher overrides unless the stock `/usr/share/applications/hyprmon.desktop` is actually broken.
 

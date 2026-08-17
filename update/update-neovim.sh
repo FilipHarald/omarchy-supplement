@@ -23,12 +23,11 @@ echo ""
 
 # Fetch latest updates
 echo "Fetching latest updates from GitHub..."
-git fetch --all
+git fetch origin --force refs/tags/nightly:refs/tags/nightly
 
 # Checkout nightly
 echo "Checking out nightly..."
-git checkout nightly
-git pull origin nightly
+git checkout --detach refs/tags/nightly
 
 # Clean previous builds
 echo "Cleaning previous builds..."
@@ -40,7 +39,11 @@ make CMAKE_BUILD_TYPE=Release
 
 # Install
 echo "Installing to /usr/local..."
-sudo make install
+if [ -t 0 ]; then
+    sudo make install
+else
+    pkexec make install
+fi
 
 # Verify
 NEW_VERSION=$(nvim --version | head -1)

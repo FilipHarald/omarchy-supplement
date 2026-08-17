@@ -7,5 +7,15 @@
   "kinds": ["bar-widget"],
   "entryPoints": {
     "barWidget": "Widget.qml"
+  },
+  "barWidget": {
+    "displayName": "Current Screen Workspaces",
+    "description": "Workspace numbers filtered to the bar's current screen.",
+    "category": "Compositor",
+    "defaultSection": "left",
+    "allowMultiple": false
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.workspaces"
   }
 }

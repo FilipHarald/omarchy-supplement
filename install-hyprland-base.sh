@@ -81,9 +81,13 @@ if command -v systemctl >/dev/null 2>&1; then
 fi
 
 echo "Reloading Hyprland configuration..."
-if command -v hyprctl >/dev/null 2>&1; then
-  hyprctl reload >/dev/null || true
-  hyprctl configerrors || true
+if command -v hyprctl >/dev/null 2>&1 && hyprctl instances >/dev/null 2>&1; then
+  hyprctl reload >/dev/null
+  errors="$(hyprctl configerrors)"
+  if [ -n "$errors" ]; then
+    printf '%s\n' "$errors" >&2
+    exit 1
+  fi
 fi
 
 echo "Hyprland Lua configuration setup complete."

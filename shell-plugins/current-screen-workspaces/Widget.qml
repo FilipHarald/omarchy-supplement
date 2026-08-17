@@ -78,21 +78,21 @@ BarWidget {
 
         readonly property var workspace: root.workspaceById(modelData)
         readonly property bool occupied: workspace !== null && workspace.toplevels.values.length > 0
-        readonly property bool focused: Hyprland.focusedWorkspace !== null && Hyprland.focusedWorkspace.id === modelData
+        readonly property bool active: workspace !== null && workspace.active
         readonly property bool urgent: workspace !== null && workspace.urgent
         readonly property int barSize: root.bar ? root.bar.barSize : Style.bar.sizeHorizontal
 
         implicitWidth: root.vertical ? barSize : Style.space(20)
         implicitHeight: barSize
-        opacity: occupied || focused ? 1 : 0.5
+        opacity: occupied || active ? 1 : 0.5
 
         Text {
           anchors.centerIn: parent
           text: workspaceButton.modelData === 10 ? "0" : String(workspaceButton.modelData)
-          color: workspaceButton.urgent ? "#ff0000" : (workspaceButton.focused ? "#006400" : (root.bar ? root.bar.barForeground : Color.foreground))
+          color: workspaceButton.urgent ? "#ff0000" : (workspaceButton.active ? "#006400" : (root.bar ? root.bar.barForeground : Color.foreground))
           font.family: root.bar ? root.bar.fontFamily : Style.font.family
-          font.pixelSize: workspaceButton.focused ? Style.font.subtitle : Style.font.body
-          font.weight: workspaceButton.focused || workspaceButton.urgent ? Font.Bold : Font.Normal
+          font.pixelSize: workspaceButton.active ? Style.font.subtitle : Style.font.body
+          font.weight: workspaceButton.active || workspaceButton.urgent ? Font.Bold : Font.Normal
           renderType: Text.NativeRendering
         }
 

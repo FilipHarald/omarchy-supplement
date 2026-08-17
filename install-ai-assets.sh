@@ -22,9 +22,10 @@ clone_or_pull() {
     if [ -d "$repo_dir/.git" ]; then
         echo "$name repository already exists at $repo_dir"
         echo "Pulling latest changes..."
-        git -C "$repo_dir" pull
+        git -C "$repo_dir" pull --ff-only
     elif [ -d "$repo_dir" ]; then
-        echo "$name directory exists at $repo_dir but is not a git repository. Skipping clone."
+        echo "$name directory exists at $repo_dir but is not a git repository."
+        return 1
     else
         echo "Cloning $name repository..."
         mkdir -p "$(dirname "$repo_dir")"

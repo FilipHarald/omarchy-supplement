@@ -1,8 +1,6 @@
 -- omarchy-supplement keybinding overrides.
 -- See active bindings with: omarchy menu keybindings --print
 
-local omarchy_shell_env = "omarchy-shell"
-
 -- Unbind conflicting defaults before remapping.
 hl.unbind("SUPER + J")
 hl.unbind("SUPER + CTRL + J")
@@ -12,6 +10,7 @@ hl.unbind("SUPER + L")
 hl.unbind("SUPER + CTRL + L")
 hl.unbind("SUPER + H")
 hl.unbind("SUPER + CTRL + H")
+hl.unbind("SUPER + ALT + K")
 
 hl.unbind("SUPER + LEFT")
 hl.unbind("SUPER + RIGHT")
@@ -58,8 +57,8 @@ hl.unbind("SUPER + ALT + SPACE")
 hl.unbind("SUPER + ESCAPE")
 o.bind("SUPER + U", "Show key bindings", "omarchy-menu-keybindings")
 o.bind("SUPER + I", "Toggle window split", hl.dsp.layout("togglesplit"))
-o.bind("SUPER + SPACE", "Launch apps", omarchy_shell_env .. " shell toggle omarchy.launcher '{}'")
-o.bind("SUPER + ALT + SPACE", "Omarchy menu", "omarchy-menu toggle root")
+o.bind("SUPER + SPACE", "Omarchy menu", "omarchy-menu toggle")
+o.bind("SUPER + ALT + SPACE", "Apps menu", "omarchy-menu toggle apps")
 o.bind("SUPER + ESCAPE", "System menu", "omarchy-menu toggle system")
 
 -- Override lock screen binding.

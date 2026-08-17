@@ -17,11 +17,14 @@ if ! command -v stow &>/dev/null; then
 fi
 
 # Clone dotfiles repository if it doesn't exist
-if [ -d "$REPO_DIR" ]; then
+if [ -d "$REPO_DIR/.git" ]; then
     echo "Dotfiles repository already exists at $REPO_DIR"
     echo "Pulling latest changes..."
     cd "$REPO_DIR"
-    git pull
+    git pull --ff-only
+elif [ -e "$REPO_DIR" ]; then
+    echo "$REPO_DIR exists but is not a Git repository."
+    exit 1
 else
     echo "Cloning dotfiles repository..."
     git clone "$REPO_URL" "$REPO_DIR"
@@ -46,6 +49,12 @@ for dir in "$REPO_DIR"/*/; do
     fi
 
     if [ "$dirname" = "opencode" ] || [ "$dirname" = "starship" ]; then
+        if ! git diff --quiet -- "$dirname" || ! git diff --cached --quiet -- "$dirname"; then
+            echo "$dirname has tracked local changes; stowing without --adopt."
+            stow -v "$dirname"
+            continue
+        fi
+
         stow -v --adopt "$dirname"
 
         if ! git diff --quiet -- "$dirname"; then
@@ -65,6 +74,16 @@ done
 if [ -d "$REPO_DIR/.foundry" ]; then
     echo "Stowing .foundry..."
     stow -v ".foundry"
+fi
+
+# Migrate the pre-v4 Omarchy bootstrap without disturbing user additions.
+if grep -Fq 'source ~/.local/share/omarchy/default/bash/rc' "$HOME/.bashrc"; then
+    cp "$HOME/.bashrc" "$HOME/.bashrc.bak.$(date +%Y%m%d-%H%M%S)"
+    sed -i 's|source ~/.local/share/omarchy/default/bash/rc|source "$OMARCHY_PATH/default/bash/rc"|' "$HOME/.bashrc"
+    if ! grep -Fq '/usr/share/omarchy/default/bash/env-bootstrap' "$HOME/.bashrc"; then
+        sed -i '1i[[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] \&\& source /usr/share/omarchy/default/bash/env-bootstrap\n' "$HOME/.bashrc"
+    fi
+    echo "Migrated ~/.bashrc to the Omarchy v4 bootstrap."
 fi
 
 # Add bash-additions sourcing to .bashrc if not already present.
