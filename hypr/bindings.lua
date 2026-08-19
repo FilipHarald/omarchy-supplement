@@ -11,6 +11,7 @@ hl.unbind("SUPER + CTRL + L")
 hl.unbind("SUPER + H")
 hl.unbind("SUPER + CTRL + H")
 hl.unbind("SUPER + ALT + K")
+hl.unbind("SUPER + CTRL + X")
 
 hl.unbind("SUPER + LEFT")
 hl.unbind("SUPER + RIGHT")
@@ -60,6 +61,7 @@ o.bind("SUPER + I", "Toggle window split", hl.dsp.layout("togglesplit"))
 o.bind("SUPER + SPACE", "Omarchy menu", "omarchy-menu toggle")
 o.bind("SUPER + ALT + SPACE", "Apps menu", "omarchy-menu toggle apps")
 o.bind("SUPER + ESCAPE", "System menu", "omarchy-menu toggle system")
+o.bind("SUPER + B", "Toggle dictation", "voxtype record toggle")
 
 -- Override lock screen binding.
 o.bind("SUPER + CTRL + ESCAPE", "Lock system", "omarchy system lock")
