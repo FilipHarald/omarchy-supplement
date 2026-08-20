@@ -33,7 +33,9 @@ jq --arg id "$PLUGIN_ID" '
 mv "$SHELL_CONFIG.tmp" "$SHELL_CONFIG"
 
 if pgrep -x quickshell >/dev/null 2>&1; then
-  OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}" omarchy-shell shell rescanPlugins >/dev/null
+  if ! OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}" omarchy-shell shell rescanPlugins >/dev/null; then
+    echo "Plugin files installed, but omarchy-shell could not be rescanned."
+  fi
 fi
 
 echo "Installed $PLUGIN_ID and replaced omarchy.workspaces in shell.json."

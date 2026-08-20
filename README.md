@@ -16,6 +16,7 @@ Or run individual scripts as needed:
 ./install-neovim.sh
 ./install-dotfiles.sh
 ./install-hyprland-base.sh
+./install-omarchy-plugins.sh
 ```
 
 ## Available Scripts
@@ -32,6 +33,7 @@ Or run individual scripts as needed:
 | `install-hyprland-base.sh` | Apply Omarchy Quattro Hyprland Lua configuration |
 | `install-hyprlock-animation.sh` | Configure standalone Hyprlock; Omarchy 4 uses its Quickshell lock screen |
 | `install-shell-workspaces.sh` | Install Quickshell workspace widget showing only the current screen, with active workspaces bold dark green and urgent workspaces bold red |
+| `install-omarchy-plugins.sh` | Install local Omarchy plugins, including the current-screen workspace widget |
 | `install-waybar-tweaks.sh` | Retired on Omarchy 4, which uses Quickshell instead of Waybar |
 
 ## Update Scripts

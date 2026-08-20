@@ -39,8 +39,8 @@ echo "Setting up Hyprland base configuration..."
 "$SCRIPT_DIR/install-hyprland-base.sh"
 echo ""
 
-echo "Installing Quickshell workspace widget..."
-"$SCRIPT_DIR/install-shell-workspaces.sh"
+echo "Installing Omarchy plugins..."
+"$SCRIPT_DIR/install-omarchy-plugins.sh"
 echo ""
 
 echo "=================================="
