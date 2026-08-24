@@ -107,10 +107,17 @@ for file in input.lua bindings.lua looknfeel.lua; do
 done
 [ "$hypr_drift" -eq 0 ] && pass "portable Hyprland config matches the live files"
 
-if [ -f "$HOME/.config/hypr/monitors.lua" ]; then
-  pass "machine-specific monitors.lua exists and is not supplement-managed"
+host_name="$(hostname -s)"
+if [ "$host_name" = "decem" ] && [ -f "$SCRIPT_DIR/hypr/monitors.lua" ] && \
+   [ -f "$HOME/.config/hypr/monitors.lua" ] && \
+   cmp -s "$SCRIPT_DIR/hypr/monitors.lua" "$HOME/.config/hypr/monitors.lua"; then
+  pass "decem-specific monitors.lua matches the live file"
+elif [ "$host_name" = "decem" ]; then
+  fail "decem-specific monitors.lua is missing or differs from the live file"
+elif [ -f "$SCRIPT_DIR/hypr/monitors.lua" ]; then
+  pass "decem-specific monitors.lua is checked in and skipped on host $host_name"
 else
-  warn "machine-specific monitors.lua is missing"
+  fail "decem-specific monitors.lua is missing from the supplement"
 fi
 
 if omarchy-plugin-validate "$PLUGIN_SOURCE" >/dev/null 2>&1; then
