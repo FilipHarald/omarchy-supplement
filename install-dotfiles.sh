@@ -51,11 +51,11 @@ for dir in "$REPO_DIR"/*/; do
     if [ "$dirname" = "opencode" ] || [ "$dirname" = "starship" ]; then
         if ! git diff --quiet -- "$dirname" || ! git diff --cached --quiet -- "$dirname"; then
             echo "$dirname has tracked local changes; stowing without --adopt."
-            stow -v "$dirname"
+            stow -v --restow --no-folding --target="$HOME" --dir="$REPO_DIR" "$dirname"
             continue
         fi
 
-        stow -v --adopt "$dirname"
+        stow -v --adopt --no-folding --target="$HOME" --dir="$REPO_DIR" "$dirname"
 
         if ! git diff --quiet -- "$dirname"; then
             echo "WARNING: stow --adopt changed tracked $dirname dotfiles."
@@ -67,7 +67,7 @@ for dir in "$REPO_DIR"/*/; do
         continue
     fi
 
-    stow -v "$dirname"
+    stow -v --restow --no-folding --target="$HOME" --dir="$REPO_DIR" "$dirname"
 done
 
 # Migrate the pre-v4 Omarchy bootstrap without disturbing user additions.

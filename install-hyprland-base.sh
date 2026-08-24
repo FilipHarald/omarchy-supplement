@@ -8,7 +8,6 @@ TARGET_DIR="$HOME/.config/hypr"
 TS="$(date +%Y%m%d-%H%M%S)"
 
 files=(
-  monitors.lua
   input.lua
   bindings.lua
   looknfeel.lua
@@ -33,6 +32,10 @@ mkdir -p "$TARGET_DIR"
 for file in "${files[@]}"; do
   target="$TARGET_DIR/$file"
   if [ -f "$target" ]; then
+    if ! cmp -s "$SOURCE_DIR/$file" "$target"; then
+      echo "Changes for $target:"
+      diff -u "$target" "$SOURCE_DIR/$file" || true
+    fi
     cp "$target" "$target.bak.$TS"
   fi
 
@@ -40,35 +43,7 @@ for file in "${files[@]}"; do
   echo "- $target"
 done
 
-echo "Syncing Omarchy internal monitor scale state..."
-internal_monitor_scale="$(
-  python - "$TARGET_DIR/monitors.lua" <<'PY'
-import re
-import sys
-
-path = sys.argv[1]
-text = open(path, encoding="utf-8").read()
-
-block = re.search(r'hl\.monitor\s*\(\s*\{(?=[^}]*output\s*=\s*["\']eDP-[^"\']*["\'])(.*?)\}\s*\)', text, re.S)
-if block:
-    scale = re.search(r'scale\s*=\s*([0-9]+(?:\.[0-9]+)?)', block.group(1))
-    if scale:
-        print(scale.group(1))
-        raise SystemExit(0)
-
-fallback = re.search(r'^\s*local\s+omarchy_monitor_scale\s*=\s*([0-9]+(?:\.[0-9]+)?)\s*$', text, re.M)
-if fallback:
-    print(fallback.group(1))
-PY
-)"
-
-if [ -n "$internal_monitor_scale" ]; then
-  mkdir -p "$HOME/.local/state/omarchy/toggles/hypr"
-  printf '%s\n' "$internal_monitor_scale" > "$HOME/.local/state/omarchy/toggles/hypr/internal-monitor-scale"
-  echo "- internal-monitor-scale = $internal_monitor_scale"
-else
-  echo "- no eDP/internal monitor scale found in monitors.lua; leaving Omarchy state unchanged"
-fi
+echo "- $TARGET_DIR/monitors.lua is machine-specific and was left unchanged"
 
 if [ -f "$TARGET_DIR/hyprland.conf" ]; then
   echo "Moving legacy hyprland.conf aside so Hyprland loads hyprland.lua..."

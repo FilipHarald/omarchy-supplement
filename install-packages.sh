@@ -15,7 +15,7 @@ for package in "${PACKAGES[@]}"; do
 done
 
 if [ "${#missing_packages[@]}" -gt 0 ]; then
-    yay -S --noconfirm --needed "${missing_packages[@]}"
+    omarchy pkg add "${missing_packages[@]}"
 else
     echo "Core packages are already installed."
 fi

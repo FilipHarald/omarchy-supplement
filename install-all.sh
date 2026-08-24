@@ -43,6 +43,10 @@ echo "Installing Omarchy plugins..."
 "$SCRIPT_DIR/install-omarchy-plugins.sh"
 echo ""
 
+echo "Checking installed configuration..."
+"$SCRIPT_DIR/check.sh"
+echo ""
+
 echo "=================================="
 echo "Installation complete!"
 echo "=================================="

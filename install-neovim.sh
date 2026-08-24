@@ -27,7 +27,7 @@ for package in "${DEPS[@]}"; do
 done
 
 if [ "${#missing_deps[@]}" -gt 0 ]; then
-    yay -S --noconfirm --needed "${missing_deps[@]}"
+    omarchy pkg add "${missing_deps[@]}"
 else
     echo "Build dependencies are already installed."
 fi

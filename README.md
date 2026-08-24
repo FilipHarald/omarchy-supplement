@@ -17,6 +17,7 @@ Or run individual scripts as needed:
 ./install-dotfiles.sh
 ./install-hyprland-base.sh
 ./install-omarchy-plugins.sh
+./check.sh
 ```
 
 ## Available Scripts
@@ -34,6 +35,7 @@ Or run individual scripts as needed:
 | `install-hyprlock-animation.sh` | Configure standalone Hyprlock; Omarchy 4 uses its Quickshell lock screen |
 | `install-shell-workspaces.sh` | Install Quickshell workspace widget showing only the current screen, with active workspaces bold dark green and urgent workspaces bold red |
 | `install-omarchy-plugins.sh` | Install local Omarchy plugins, including the current-screen workspace widget |
+| `check.sh` | Check repositories, Stow packages, portable Hyprland config, plugins, and secrets without changing them |
 | `install-waybar-tweaks.sh` | Retired on Omarchy 4, which uses Quickshell instead of Waybar |
 
 ## Update Scripts
@@ -76,7 +78,8 @@ Located in the `update/` directory:
 
 ## Omarchy Quattro / Hyprland Lua Notes
 
-- `install-hyprland-base.sh` copies the supplement's Lua modules from `hypr/` into `~/.config/hypr/`.
+- `install-hyprland-base.sh` copies the portable Lua modules from `hypr/` into `~/.config/hypr/` and shows their diffs first.
+- `~/.config/hypr/monitors.lua` is machine-specific and is never overwritten by the supplement.
 - Omarchy's `~/.config/hypr/hyprland.lua` loads these modules with `require("hypr.monitors")`, `require("hypr.input")`, `require("hypr.bindings")`, and `require("hypr.looknfeel")`.
 - If a legacy `~/.config/hypr/hyprland.conf` exists, the installer moves it aside so Hyprland uses the Lua config.
 - `hyprland-base.conf` and `hyprland-looknfeel-compat.conf` are legacy references for the old `.conf` setup.
