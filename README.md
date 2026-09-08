@@ -78,7 +78,8 @@ Located in the `update/` directory:
 
 ## Omarchy Quattro / Hyprland Lua Notes
 
-- `install-hyprland-base.sh` copies the portable Lua modules from `hypr/` into `~/.config/hypr/` and shows their diffs first.
+- `install-hyprland-base.sh` copies the portable `bindings.lua` and `looknfeel.lua` modules from `hypr/` into `~/.config/hypr/` and shows their diffs first.
+- `~/.config/hypr/input.lua` is a regular file tracked and synchronized by mise through the private `dotfiles-private` history repository.
 - `hypr/monitors.lua` is the checked-in configuration for host `decem`; the installer applies it only when `hostname -s` is exactly `decem` and skips it everywhere else.
 - Omarchy's `~/.config/hypr/hyprland.lua` loads these modules with `require("hypr.monitors")`, `require("hypr.input")`, `require("hypr.bindings")`, and `require("hypr.looknfeel")`.
 - If a legacy `~/.config/hypr/hyprland.conf` exists, the installer moves it aside so Hyprland uses the Lua config.

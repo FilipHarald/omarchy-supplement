@@ -8,6 +8,10 @@ PLUGIN_ID="local.current-screen-workspaces"
 PLUGIN_SOURCE="$SCRIPT_DIR/shell-plugins/current-screen-workspaces"
 PLUGIN_TARGET="$HOME/.config/omarchy/plugins/$PLUGIN_ID"
 SHELL_CONFIG="$HOME/.config/omarchy/shell.json"
+MISE_BIN="$(command -v mise)"
+if [ -x "$HOME/.local/bin/mise" ]; then
+  MISE_BIN="$HOME/.local/bin/mise"
+fi
 passes=0
 warnings=0
 failures=0
@@ -93,7 +97,7 @@ if [ -d "$DOTFILES" ]; then
 fi
 
 hypr_drift=0
-for file in input.lua bindings.lua looknfeel.lua; do
+for file in bindings.lua looknfeel.lua; do
   if [ ! -f "$SCRIPT_DIR/hypr/$file" ]; then
     fail "portable Hyprland source is missing: $file"
     hypr_drift=1
@@ -106,6 +110,12 @@ for file in input.lua bindings.lua looknfeel.lua; do
   fi
 done
 [ "$hypr_drift" -eq 0 ] && pass "portable Hyprland config matches the live files"
+
+if "$MISE_BIN" bootstrap dotfiles paths 2>/dev/null | grep -Fq '~/.config/hypr/input.lua'; then
+  pass "Hyprland input.lua is tracked by mise"
+else
+  fail "Hyprland input.lua is not tracked by mise"
+fi
 
 host_name="$(hostname -s)"
 if [ "$host_name" = "decem" ] && [ -f "$SCRIPT_DIR/hypr/monitors.lua" ] && \

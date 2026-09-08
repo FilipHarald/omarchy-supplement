@@ -8,7 +8,6 @@ TARGET_DIR="$HOME/.config/hypr"
 TS="$(date +%Y%m%d-%H%M%S)"
 
 files=(
-  input.lua
   bindings.lua
   looknfeel.lua
 )
