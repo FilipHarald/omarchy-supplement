@@ -12,11 +12,6 @@ files=(
   looknfeel.lua
 )
 
-host_name="$(hostname -s)"
-if [ "$host_name" = "decem" ]; then
-  files+=(monitors.lua)
-fi
-
 if [ ! -f "$TARGET_DIR/hyprland.lua" ]; then
   echo "Hyprland Lua config not found at $TARGET_DIR/hyprland.lua"
   echo "Run Omarchy Quattro/dev setup first."
@@ -46,12 +41,6 @@ for file in "${files[@]}"; do
   cp "$SOURCE_DIR/$file" "$target"
   echo "- $target"
 done
-
-if [ "$host_name" = "decem" ]; then
-  echo "- $TARGET_DIR/monitors.lua was installed for host decem"
-else
-  echo "- $TARGET_DIR/monitors.lua is decem-specific and was skipped on host $host_name"
-fi
 
 if [ -f "$TARGET_DIR/hyprland.conf" ]; then
   echo "Moving legacy hyprland.conf aside so Hyprland loads hyprland.lua..."

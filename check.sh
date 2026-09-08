@@ -2,6 +2,8 @@
 
 set -uo pipefail
 
+export OMARCHY_PATH="${OMARCHY_PATH:-/usr/share/omarchy}"
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 PLUGIN_ID="local.current-screen-workspaces"
@@ -118,22 +120,62 @@ else
 fi
 
 host_name="$(hostname -s)"
-if [ "$host_name" = "decem" ] && [ -f "$SCRIPT_DIR/hypr/monitors.lua" ] && \
-   [ -f "$HOME/.config/hypr/monitors.lua" ] && \
-   cmp -s "$SCRIPT_DIR/hypr/monitors.lua" "$HOME/.config/hypr/monitors.lua"; then
-  pass "decem-specific monitors.lua matches the live file"
-elif [ "$host_name" = "decem" ]; then
-  fail "decem-specific monitors.lua is missing or differs from the live file"
-elif [ -f "$SCRIPT_DIR/hypr/monitors.lua" ]; then
-  pass "decem-specific monitors.lua is checked in and skipped on host $host_name"
+mise_service_environment="$(systemctl --user show dev.mise.mise-history.service -p Environment --value 2>/dev/null || true)"
+if grep -Eq "(^|[[:space:]])MISE_ENV=$host_name([[:space:]]|$)" <<< "$mise_service_environment"; then
+  pass "mise history watcher uses the $host_name profile"
 else
-  fail "decem-specific monitors.lua is missing from the supplement"
+  fail "mise history watcher is not configured with MISE_ENV=$host_name"
+fi
+
+if [ "$host_name" = "decem" ]; then
+  mise_paths="$("$MISE_BIN" -E decem bootstrap dotfiles paths 2>/dev/null)"
+  if grep -Fq '~/.config/hypr/monitor-layouts/one-screen.lua' <<< "$mise_paths" && \
+     grep -Fq '~/.config/hypr/monitor-layouts/two-screens.lua' <<< "$mise_paths" && \
+     grep -Fq '~/.local/bin/omarchy-monitor-layout' <<< "$mise_paths"; then
+    pass "decem monitor layouts and switcher are tracked by the decem mise profile"
+  else
+    fail "decem monitor layouts or switcher are not tracked by the decem mise profile"
+  fi
+
+  if grep -Fq '~/.config/hypr/monitors.lua' <<< "$mise_paths"; then
+    fail "derived monitors.lua is still tracked by mise"
+  elif cmp -s "$HOME/.config/hypr/monitors.lua" "$HOME/.config/hypr/monitor-layouts/one-screen.lua" || \
+       cmp -s "$HOME/.config/hypr/monitors.lua" "$HOME/.config/hypr/monitor-layouts/two-screens.lua"; then
+    pass "active monitors.lua matches a named layout"
+  else
+    fail "active monitors.lua does not match a named layout"
+  fi
+else
+  pass "monitors.lua remains host-local on $host_name"
 fi
 
 if omarchy-plugin-validate "$PLUGIN_SOURCE" >/dev/null 2>&1; then
   pass "workspace plugin source validates"
 else
   fail "workspace plugin source does not validate"
+fi
+
+OMACOACH_ID="io.github.filipharald.omacoach"
+OMACOACH_DIR="$HOME/.config/omarchy/plugins/$OMACOACH_ID"
+OMACOACH_SOURCE="$(readlink -f "$OMACOACH_DIR" 2>/dev/null || true)"
+if [ -n "$OMACOACH_SOURCE" ] && [ -d "$OMACOACH_SOURCE/.git" ] && \
+   omarchy-plugin-validate "$OMACOACH_SOURCE" >/dev/null 2>&1; then
+  pass "Omacoach is installed and validates"
+else
+  fail "Omacoach is missing or invalid"
+fi
+
+if omarchy plugin list 2>/dev/null | grep -Eq "^$OMACOACH_ID[[:space:]]+enabled"; then
+  pass "Omacoach is enabled"
+else
+  fail "Omacoach is not enabled"
+fi
+
+if grep -Fq -- '-- omacoach:start' "$HOME/.config/hypr/bindings.lua" && \
+   grep -Fq -- '-- omacoach-binding:start' "$HOME/.config/hypr/bindings.lua"; then
+  pass "Omacoach observer and panel binding are installed"
+else
+  fail "Omacoach bindings are missing"
 fi
 
 if [ -d "$PLUGIN_TARGET" ] && diff -qr "$PLUGIN_SOURCE" "$PLUGIN_TARGET" >/dev/null 2>&1; then

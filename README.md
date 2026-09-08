@@ -29,12 +29,13 @@ Or run individual scripts as needed:
 | `install-stow.sh` | Install GNU Stow |
 | `install-neovim.sh` | Build and install Neovim nightly from source |
 | `install-dotfiles.sh` | Clone and stow dotfiles from your repository |
+| `install-mise-profile.sh` | Select the hostname as the mise history watcher profile |
 | `install-ai-assets.sh` | Clone/pull and stow `ai-public` and `ai-private` workflow assets |
 | `install-npm-config.sh` | Configure npm globals when Node is not managed by nvm |
 | `install-hyprland-base.sh` | Apply Omarchy Quattro Hyprland Lua configuration |
 | `install-hyprlock-animation.sh` | Configure standalone Hyprlock; Omarchy 4 uses its Quickshell lock screen |
 | `install-shell-workspaces.sh` | Install Quickshell workspace widget showing only the current screen, with active workspaces bold dark green and urgent workspaces bold red |
-| `install-omarchy-plugins.sh` | Install local Omarchy plugins, including the current-screen workspace widget |
+| `install-omarchy-plugins.sh` | Install the current-screen workspace widget and Omacoach with its Hyprland bindings |
 | `check.sh` | Check repositories, Stow packages, portable Hyprland config, plugins, and secrets without changing them |
 | `install-waybar-tweaks.sh` | Retired on Omarchy 4, which uses Quickshell instead of Waybar |
 
@@ -79,8 +80,10 @@ Located in the `update/` directory:
 ## Omarchy Quattro / Hyprland Lua Notes
 
 - `install-hyprland-base.sh` copies the portable `bindings.lua` and `looknfeel.lua` modules from `hypr/` into `~/.config/hypr/` and shows their diffs first.
+- Host-specific monitor layout sources are tracked by mise profiles instead of this repository. Decem uses `one-screen` and `two-screens`; `~/.config/hypr/monitors.lua` is derived by running `omarchy-monitor-layout <name>`. Octi keeps its monitor file local.
+- `install-mise-profile.sh` persists `MISE_ENV=$(hostname -s)` for the mise history watcher so host variants remain active after reboot.
 - `~/.config/hypr/input.lua` is a regular file tracked and synchronized by mise through the private `dotfiles-private` history repository.
-- `hypr/monitors.lua` is the checked-in configuration for host `decem`; the installer applies it only when `hostname -s` is exactly `decem` and skips it everywhere else.
+- Mise also owns `~/.bashrc`; `install-dotfiles.sh` no longer edits it after Stow runs.
 - Omarchy's `~/.config/hypr/hyprland.lua` loads these modules with `require("hypr.monitors")`, `require("hypr.input")`, `require("hypr.bindings")`, and `require("hypr.looknfeel")`.
 - If a legacy `~/.config/hypr/hyprland.conf` exists, the installer moves it aside so Hyprland uses the Lua config.
 - `hyprland-base.conf` and `hyprland-looknfeel-compat.conf` are legacy references for the old `.conf` setup.

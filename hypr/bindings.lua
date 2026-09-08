@@ -65,3 +65,26 @@ o.bind("SUPER + B", "Toggle dictation", "voxtype record toggle")
 
 -- Override lock screen binding.
 o.bind("SUPER + CTRL + ESCAPE", "Lock system", "omarchy system lock")
+
+-- omacoach:start
+do
+  local home = os.getenv("HOME")
+  local path = home and (home .. "/.config/omarchy/plugins/io.github.filipharald.omacoach/hypr/observer.lua")
+  if path then
+    local file = io.open(path, "r")
+    if file then
+      file:close()
+      local ok, err = pcall(dofile, path)
+      if not ok then io.stderr:write("omacoach: " .. tostring(err) .. "\n") end
+    end
+  end
+end
+-- omacoach:end
+
+-- omacoach-binding:start
+do
+  local home = os.getenv("HOME")
+  local command = home and (home .. "/.config/omarchy/plugins/io.github.filipharald.omacoach/bin/toggle-panel")
+  if command then o.bind("SUPER + CTRL + K", "Toggle Omacoach", command) end
+end
+-- omacoach-binding:end

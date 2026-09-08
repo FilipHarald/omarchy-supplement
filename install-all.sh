@@ -27,6 +27,10 @@ echo "Setting up dotfiles..."
 "$SCRIPT_DIR/install-dotfiles.sh"
 echo ""
 
+echo "Configuring the mise host profile..."
+"$SCRIPT_DIR/install-mise-profile.sh"
+echo ""
+
 echo "Setting up AI workflow assets..."
 "$SCRIPT_DIR/install-ai-assets.sh"
 echo ""

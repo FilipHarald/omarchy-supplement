@@ -4,9 +4,6 @@ set -e
 
 REPO_URL="https://github.com/FilipHarald/dotfiles"
 REPO_DIR="$HOME/dotfiles"
-BASH_ADDITIONS_BLOCK='if [[ -f "$HOME/.config/bash-additions/entry.sh" ]]; then
-  source "$HOME/.config/bash-additions/entry.sh"
-fi'
 
 echo "Setting up dotfiles..."
 
@@ -70,26 +67,5 @@ for dir in "$REPO_DIR"/*/; do
     stow -v --restow --no-folding --target="$HOME" --dir="$REPO_DIR" "$dirname"
 done
 
-# Migrate the pre-v4 Omarchy bootstrap without disturbing user additions.
-if grep -Fq 'source ~/.local/share/omarchy/default/bash/rc' "$HOME/.bashrc"; then
-    cp "$HOME/.bashrc" "$HOME/.bashrc.bak.$(date +%Y%m%d-%H%M%S)"
-    sed -i 's|source ~/.local/share/omarchy/default/bash/rc|source "$OMARCHY_PATH/default/bash/rc"|' "$HOME/.bashrc"
-    if ! grep -Fq '/usr/share/omarchy/default/bash/env-bootstrap' "$HOME/.bashrc"; then
-        sed -i '1i[[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] \&\& source /usr/share/omarchy/default/bash/env-bootstrap\n' "$HOME/.bashrc"
-    fi
-    echo "Migrated ~/.bashrc to the Omarchy v4 bootstrap."
-fi
-
-# Add bash-additions sourcing to .bashrc if not already present.
-# Omarchy upgrades can reset ~/.bashrc, so install-all re-applies this hook.
-if [[ -f "$HOME/.bashrc" ]]; then
-    if ! grep -q "bash-additions/entry.sh" "$HOME/.bashrc"; then
-        printf '\n# Source custom bash additions from dotfiles\n%s\n' "$BASH_ADDITIONS_BLOCK" >> "$HOME/.bashrc"
-        echo "Added bash-additions sourcing to ~/.bashrc"
-    else
-        echo "bash-additions sourcing already present in ~/.bashrc"
-    fi
-fi
-
 echo "Dotfiles installed successfully!"
-echo "NOTE: Your nvim, git, and bash configurations are now active."
+echo "NOTE: Stow-managed configuration is now active; mise owns ~/.bashrc and ~/.gitconfig."
